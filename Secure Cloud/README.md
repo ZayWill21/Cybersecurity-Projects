@@ -38,8 +38,7 @@ The Secure Cloud implements a hub-and-spoke security architecture leveraging AWS
 2. **Security Services Layer**: GuardDuty, Inspector, Macie, and CSPM icons distributed across accounts
 3. **Aggregation Layer**: Security Hub (delegated administrator) with OCSF normalization engine
 4. **Correlation Layer**: Exposure finding engine showing attack path analysis
-5. **Integration Layer**: Bidirectional arrows to Jira/ServiceNow and SIEM platforms
-6. **Data Flow**: Color-coded arrows showing threat, vulnerability, compliance, and data security findings flowing into Security Hub
+5. **Data Flow**: Color-coded arrows showing threat, vulnerability, compliance, and data security findings flowing into Security Hub
 
 ## Technologies Used
 
