@@ -31,7 +31,8 @@ Please note that some information was redacted for security concerns
 
 The Secure Cloud implements a hub-and-spoke security architecture leveraging AWS Organizations for centralized management. Security Hub operates as the central aggregation and correlation layer, ingesting findings from distributed security services across multiple accounts and regions. The delegated administrator pattern enables security teams to maintain separation of duties while providing comprehensive visibility into the security posture of member accounts. GuardDuty provides runtime threat detection, Inspector performs continuous vulnerability and network reachability assessments, Macie discovers and classifies sensitive data, and Security Hub CSPM evaluates compliance against industry frameworks. All findings are normalized using OCSF and correlated to identify exposure paths, with critical findings automatically routed to ITSM platforms for incident response workflows.
 
-<!-- INSERT ARCHITECTURE DIAGRAM HERE -->
+<img width="842" height="419" alt="image" src="https://github.com/user-attachments/assets/b4ba55cb-8ded-4090-8bfd-b89c6cd18e2d"/>
+
 
 **Recommended Diagram**: A multi-layer architecture diagram showing:
 1. **Top Layer**: AWS Organizations structure with management account and member accounts
