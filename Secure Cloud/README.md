@@ -51,7 +51,7 @@ The Secure Cloud implements a hub-and-spoke security architecture leveraging AWS
 - **AWS Organizations** - Multi-account management service enabling centralized governance, service control policies, and delegated administration for security services
 - **OCSF (Open Cybersecurity Schema Framework)** - Vendor-agnostic schema standardizing security event data for seamless integration with SIEM, SOAR, and analytics platforms
 - **AWS Labs GuardDuty Findings Tester** - Open-source testing framework generating realistic GuardDuty findings for validation of detection and correlation pipelines
-- 
+
 ## Skills Demonstrated
 - **Cloud Security Architecture Design** - Architected enterprise-grade security operations platform leveraging AWS-native services with centralized management and distributed enforcement patterns
 - **Multi-Account Security Governance** - Implemented AWS Organizations integration with delegated administrator configuration for scalable security management across organizational boundaries
@@ -66,7 +66,6 @@ The Secure Cloud implements a hub-and-spoke security architecture leveraging AWS
 - **Security Testing and Validation** - Executed comprehensive testing protocols using AWS Labs tools to validate detection capabilities and correlation accuracy
 
 ## Implementation Details
-
 ### Planning and Assessment Phase
 
 The implementation began with a comprehensive planning phase to establish clear success criteria and evaluate organizational readiness. Key activities included assessing AWS Organizations permissions, inventorying existing security service deployments, and designing an activation timeline that would maximize the value of trial periods across multiple services. A critical design decision involved coordinating service activation to ensure at least two weeks of overlapping coverage between the shortest trial period (Inspector at 15 days) and longer trials (GuardDuty, Macie, and CSPM at 30 days).
@@ -88,25 +87,19 @@ Service activation followed a carefully orchestrated timeline to optimize trial 
 
 # Enable Security Hub at organization level
 aws securityhub enable-organization-admin-account \
-  --admin-account-id 123456789012
+  --admin-account-id <123456789012>
 
 # Enable GuardDuty with all protection plans (30-day trial)
-aws guardduty create-detector \
-  --enable \
-  --finding-publishing-frequency FIFTEEN_MINUTES \
-  --data-sources S3Logs={Enable=true},Kubernetes={AuditLogs={Enable=true}},MalwareProtection={ScanEc2InstanceWithFindings={EbsVolumes={Enable=true}}}
+aws guardduty create-detector --enable --finding-publishing-frequency FIFTEEN_MINUTES --data-sources S3Logs={Enable=true},Kubernetes={AuditLogs={Enable=true}},MalwareProtection={ScanEc2InstanceWithFindings={EbsVolumes={Enable=true}}}
 
 # Enable Inspector v2 (15-day trial)
-aws inspector2 enable \
-  --resource-types EC2 ECR LAMBDA
+aws inspector2 enable --resource-types EC2 ECR LAMBDA
 
 # Enable Macie (30-day trial)
 aws macie2 enable-macie
 
 # Enable Security Hub CSPM (30-day trial)
-aws securityhub update-security-hub-configuration \
-  --enable-default-standards \
-  --control-finding-generator SECURITY_CONTROL
+aws securityhub update-security-hub-configuration --enable-default-standards --control-finding-generator SECURITY_CONTROL
 ```
 
 **Trial Period Optimization Strategy:**
@@ -120,25 +113,16 @@ I implemented a delegated administrator pattern for centralized security managem
 
 ```bash
 # Configure delegated administrator for Security Hub
-aws organizations register-delegated-administrator \
-  --account-id 123456789012 \
-  --service-principal securityhub.amazonaws.com
+aws organizations register-delegated-administrator --account-id <123456789012> --service-principal securityhub.amazonaws.com
 
 # Enable Security Hub in all required regions
 REGIONS=("us-east-1" "us-west-2" "eu-west-1" "ap-southeast-1")
 
 for region in "${REGIONS[@]}"; do
-  aws securityhub enable-security-hub \
-    --region $region \
-    --enable-default-standards \
-    --control-finding-generator SECURITY_CONTROL
+  aws securityhub enable-security-hub --region $region --enable-default-standards --control-finding-generator SECURITY_CONTROL
   
   # Enable integrations in each region
-  aws securityhub batch-enable-standards \
-    --region $region \
-    --standards-subscription-requests \
-      StandardsArn=arn:aws:securityhub:$region::standards/cis-aws-foundations-benchmark/v/1.4.0 \
-      StandardsArn=arn:aws:securityhub:$region::standards/pci-dss/v/3.2.1
+  aws securityhub batch-enable-standards --region $region --standards-subscription-requests StandardsArn=arn:aws:securityhub:$region::standards/cis-aws-foundations-benchmark/v/1.4.0 StandardsArn=arn:aws:securityhub:$region::standards/pci-dss/v/3.2.1
 done
 ```
 
